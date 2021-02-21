@@ -35,3 +35,5 @@ jobs:
       - name: '运行 【京东金融领白条券】'
         run: |
           node jd_baitiao.js
+        env:
+          JD_COOKIE: ${{ secrets.JD_COOKIE }}
