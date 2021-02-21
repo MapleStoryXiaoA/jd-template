@@ -1,30 +1,26 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: 京豆签到类
+name: jd_bean_sign
 
 on:
-  push:
   workflow_dispatch:
   schedule:
-    - cron: '30 15,0 * * *'
-  # watch:
-  #   types: started
+    - cron: '0 16 * * *'
+  watch:
+    types: started
   repository_dispatch:
-    types: 签到类
+    types: bean_sgin
 jobs:
-  Build-Nodejs-and-Scripts:
+  build:
+
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
-      - name: 获取 Scripts
-        run: |
-          git clone -b master https://gitlab.com/MrRight/Scripts.git ~/scripts
-      - name: 获取备份仓库
-        if: ${{ failure() }}
-        run: |
-          git clone -b master https://gitlab.com/MrRight/Scripts.git ~/scripts
-
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: zero205/JD
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -36,27 +32,19 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }} # 使用 package-lock.json 的 Hash 作为缓存的 key。也可以使用 package.json 代替
-
-      - name: '运行 【京豆签到类:】'
-        run: | #  
-          cd ~/scripts
-          npm install 
+      - name: npm install
+        run: |
+          npm install
+      - name: '运行 【京豆签到脚本】'
+        run: |
           node jd_bean_sign.js
-          node jd_bean_home.js
-          node jd_bean_change.js
-          node jd_club_lottery.js
-          node jd_car.js
-          node jd_kd.js
-          node jd_cash.js
-          node jx_sign.js
-          node jd_nh.js
-          node jd_new_shop.js
-          node jd_immortal.js
-          node jd_jdzz.js
-          node jd_baiTiao.js
-          node jd_paopao.js
         env:
           JD_COOKIE: ${{ secrets.JD_COOKIE }}
+          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
+          PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER }}
+          IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
+          QYWX_KEY: ${{ secrets.QYWX_KEY }}
+          QYWX_AM: ${{ secrets.QYWX_AM }}
           JD_DEBUG: ${{ secrets.JD_DEBUG }}
           JD_BEAN_STOP: ${{secrets.JD_BEAN_STOP}} #自定义延迟签到,单位毫秒. 默认分批并发无延迟. 延迟作用于每个签到接口, 如填入延迟则切换顺序签到(耗时较长)
           JD_BEAN_SIGN_STOP_NOTIFY: ${{secrets.JD_BEAN_SIGN_STOP_NOTIFY}}
@@ -68,4 +56,4 @@ jobs:
           BARK_SOUND: ${{ secrets.BARK_SOUND }}
           DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
           DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
-          IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
+          JD_USER_AGENT: ${{ secrets.JD_USER_AGENT }}
