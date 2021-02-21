@@ -4,7 +4,6 @@
 name: 京东金融领白条券
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '0 */1 * * *'
