@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          git clone -b master https://github.com/gcdd1993/left1.git ~/scripts
+          git clone -b main https://github.com/WYisShuaiBi/jd-template.git ~/scripts
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -28,7 +28,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }} # 使用 package-lock.json 的 Hash 作为缓存的 key。也可以使用 package.json 代替
-      - name: '运行 【京小超兑换奖品】'
+      - name: '运行 【京东金融领白条券】'
         run: | 
           cd ~/scripts
           npm install
